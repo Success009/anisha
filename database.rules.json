@@ -1,0 +1,83 @@
+{
+  "rules": {
+    "anisha": {
+       ".read": true,
+       ".write": true
+    },
+    "hardik": {
+       ".read": true,
+       ".write": true
+     },
+    "Ability": {
+      ".read": true,
+      "abilities": { ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous'" },
+      "subAbilities": { ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous'" },
+      "rules": { ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous'" },
+      "announcements": { 
+        ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous'",
+        "$id": {
+          "votes": {
+            "$uid": {
+              ".write": "auth.uid === $uid && root.child('Ability/security/users').child(auth.uid).exists()"
+            }
+          },
+          "comments": {
+            ".read": true,
+            "$commentId": {
+              ".write": "auth != null && root.child('Ability/security/users').child(auth.uid).exists()",
+              ".validate": "newData.hasChildren(['ign', 'text', 'timestamp']) && newData.child('ign').val() === root.child('Ability/security/users').child(auth.uid).child('ign').val()"
+            }
+          }
+        }
+      },
+      "minecraft": {
+        "chatLogs": {
+          "$msgId": {
+            ".write": "auth != null",
+            ".validate": "(auth.token.firebase.sign_in_provider !== 'anonymous') || (newData.child('source').val() === 'WEB' && ( (root.child('Ability/security/users').child(auth.uid).exists() && newData.child('player').val() === root.child('Ability/security/users').child(auth.uid).child('ign').val()) || (!root.child('Ability/security/users').child(auth.uid).exists() && newData.child('player').val() === 'Anonymous') ))"
+          }
+        },
+        "status": { ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous'" },
+        "onlinePlayers": { ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous'" }
+      },
+      "security": {
+        "users": {
+          ".write": "auth != null && auth.token.firebase.sign_in_provider !== 'anonymous'",
+          "$uid": { ".read": "auth.uid === $uid" }
+        },
+        "link_requests": {
+          "$uid": {
+            ".write": "auth.uid === $uid",
+            ".validate": "newData.isString() && newData.val().length === 6"
+          }
+        }
+      }
+    },
+    
+    "home_system": {
+       ".read": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'",
+       ".write": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'"
+     },
+
+    "portfolio": {
+      "blog": {
+        "posts": {
+          ".read": true,
+          ".write": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'"
+        }
+      },
+      "ai_context": {
+        ".read": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'",
+        ".write": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'"
+      },
+      "ai_chat": {
+        ".read": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'",
+        ".write": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'"
+      },
+      "config": {
+         ".read": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'",
+         ".write": "auth.uid == '3u6ylRq3pPe8FnAKilcJmADaooR2'"
+      }
+    }
+  }
+}
